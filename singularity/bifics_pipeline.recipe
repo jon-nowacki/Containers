@@ -1,0 +1,40 @@
+Bootstrap: localimage
+From: Ubuntu18-Conda-Layer2_Bifics.simg
+
+%files
+    snakemake.tar.gz
+
+%environment
+    action="${0##*/}"
+    if [ "$action" = "shell" ]; then
+        if [ "${SINGULARITY_SHELL:-}" = "/bin/bash" ]; then
+            set -- --noprofile --init-file /.singularity_bash
+        elif test -z "${SINGULARITY_SHELL:-}"; then
+            export SINGULARITY_SHELL=/bin/bash
+            set -- --noprofile --init-file /.singularity_bash
+        fi
+    fi
+
+%post
+    echo "## Activate Bifics environment" >> /.singularity_bash
+    #echo "source /usr/local/miniconda3/etc/profile.d/conda.sh" >> /.singularity_bash
+    echo "source activate bifics" >> /.singularity_bash
+    echo 'alias clonePipeline="git clone git@github.com:JonN17/Snakemake.git"' >> /.singularity_bash
+    echo 'alias setupPipeline="source /setupPipeline.sh"' >> /.singularity_bash
+    echo "clear" >> /.singularity_bash
+    echo 'echo "# =================================================="' >> /.singularity_bash
+    echo 'echo "# Welcome to the Singularity Container"' >> /.singularity_bash
+    echo 'echo "# Type setupPipeline to extract the pipeline." ' >> /.singularity_bash
+    echo 'echo "# =================================================="' >> /.singularity_bash
+    echo "clear" >> /setupPipeline.sh
+    echo "gunzip -c /snakemake.tar.gz > snakemake.tar" >> /setupPipeline.sh
+    echo "tar -xvf snakemake.tar" >> /setupPipeline.sh
+    echo "cd snakemake" >> /setupPipeline.sh
+    echo 'echo "# =================================================="' >> /setupPipeline.sh
+    echo 'echo "# Welcome to the Singularity Container"' >> /setupPipeline.sh
+    echo 'echo "# The pipeline has been extracted to your local directory"' >> /setupPipeline.sh
+    echo 'echo "# =================================================="' >> /setupPipeline.sh
+
+%runscript
+    exec /bin/bash --noprofile --init-file /.singularity_bash "$@"
+~                                                                 
