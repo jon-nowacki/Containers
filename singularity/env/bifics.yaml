@@ -1,0 +1,15 @@
+name: dnaseq
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - bedtools
+  - bwa
+  - fastp
+  - gatk4
+  - multiqc
+  - snakemake
+  - samtools
+  - r

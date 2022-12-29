@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%runscript
+    exec echo "This is an Ubuntu Container with Anaconda, Mambaforce and basic utilities."
+
+%files
+
+%environment
+   CONDA_INSTALL_PATH="/usr/local/anaconda3"
+   CONDA_BIN_PATH="/usr/local/anaconda3/bin"
+   export PATH="$CONDA_BIN_PATH:$PATH"
+
+%runScript
+
+%labels
+   AUTHOR jnowacki@gmail.com
+   An Ubuntu image with Anaconda & Mamba
+
+%post
+   echo "The post section is where you can install, and configure your container."
+   # Installing commonly used apps
+   apt-get update && apt-get -y install bc build-essential htop gawk git wget vim parallel pigz python3 python-pip
+   pip install matplotlib numpy pandas scipy  
+   # Making Data Directory
+   mkdir -p /BIFICS
+   # download and install Anaconda
+   ANACONDA_VERSION="Anaconda3-2022.10-Linux-x86_64.sh"
+   MAMBA_VERSION=`echo "Mambaforge-$(uname)-$(uname -m).sh"`
+   wget https://repo.continuum.io/archive/$ANACONDA_VERSION
+   wget https://github.com/conda-forge/miniforge/releases/latest/download/$MAMBA_VERSION
+   chmod +x $ANACONDA_VERSION
+   chmod +x $MAMBA_VERSION
+   CONDA_INSTALL_PATH="/usr/local/anaconda3"
+   MAMBA_INSTALL_PATH="/usr/local/mambaforge"
+   ./$MAMBA_VERSION -b -p $MAMBA_INSTALL_PATH
+   ./$ANACONDA_VERSION -b -p $CONDA_INSTALL_PATH
+   export PATH="/usr/local/anaconda3/bin:$PATH" # can't create environments without this
+   export PATH="/usr/local/mambaforge/bin:$PATH" # can't create environments without this
+   which conda
+   which mamba
+   ls $CONDA_INSTALL_PATH | head
+

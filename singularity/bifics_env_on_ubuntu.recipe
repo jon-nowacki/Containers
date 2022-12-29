@@ -1,0 +1,22 @@
+Bootstrap: localimage
+From: ubuntu_mamba_base.simg
+
+%runscript
+    exec echo "Installing Software via Mamba"
+
+%files
+   env/bifics.yaml
+
+%environment
+   MAMBA_INSTALL_PATH="/usr/local/mambaforge"
+   MAMBA_BIN_PATH="/usr/local/mambaforge/bin"
+   export PATH="$MAMBA_BIN_PATH:$PATH"
+
+
+%runScript
+
+%labels
+   Bioinformatics Environment
+
+%post
+   /usr/local/mambaforge/bin/mamba env create --name bifics --file env/bifics.yaml
