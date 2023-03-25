@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+# Version impacts syntax
+# You must write this in sync with version of api
+kind: Deployment
+metadata:
+    name: nginx-deployment # can be anything
+# Selector and labels 
+# Selector - take all of pods w/ this label
+# matchLabels- 
+spec:
+  selector:
+    matchLabels:
+      app: nginx-app
+  replicas: 2 # 2 pods
+  template:
+    metadata:
+      labels:
+         app: nginx-app
+    # Spec of pod itself
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80

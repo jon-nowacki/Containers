@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+# Version impacts syntax
+# You must write this in sync with version of api
+kind: Service
+metadata:
+    name: nginx-service # can be anything
+spec:
+  type: NodePort
+  selector:
+    app: nginx-app
+  ports:
+    # TCP is default
+  - protocol: TCP
+    # port 80 is default
+    port: 80
+    # targetPort must match containerPort, this is the only mandatory field
+    targetPort: 80
+    nodePort: 3008
